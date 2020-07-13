@@ -1,0 +1,500 @@
+package processor;
+
+import java.util.Scanner;
+
+interface Operation {
+    // Addition and multiplying matrices method
+    double[][] execute(double[][] firstMatrix, double[][] secondMatrix, int rows, int cols);
+    // Multiply matrix by a constant method
+    double[][] execute(double[][] matrix, int rows, int cols);
+    // Transpose matrix method
+    double[][] execute(double[][] matrix, int rows, int cols, int choice);
+    // Inverse matrix method
+    double[][] execute(double[][] matrix);
+    // Determinant method
+    double execute(double[][] matrix, int n);
+}
+
+class Addition implements Operation {
+
+    @Override
+    public double[][] execute(double[][] firstMatrix, double[][] secondMatrix, int rows, int cols) {
+        double[][] result = new double[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = firstMatrix[i][j] + secondMatrix[i][j];
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public double[][] execute(double[][] matrix, int rows, int cols) {
+        return null;
+    }
+
+    @Override
+    public double[][] execute(double[][] matrix, int rows, int cols, int choice) {
+        return null;
+    }
+
+    @Override
+    public double execute(double[][] mat, int n) {
+        return 0;
+    }
+
+    @Override
+    public double[][] execute(double[][] matrix) {
+        return null;
+    }
+}
+
+class MultiplicationByConstant implements Operation {
+
+    @Override
+    public double[][] execute(double[][] matrix, int rows, int cols) {
+        System.out.print("Enter constant: ");
+        int constant = Main.sc.nextInt();
+        double[][] resultMatrix = new double[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                resultMatrix[i][j] = matrix[i][j] * constant;
+            }
+        }
+        System.out.println("The multiplication to a constant result is:");
+        return resultMatrix;
+    }
+
+    @Override
+    public double[][] execute(double[][] firstMatrix, double[][] secondMatrix, int rows, int cols) {
+        return null;
+    }
+
+    @Override
+    public double[][] execute(double[][] matrix, int rows, int cols, int choice) {
+        return null;
+    }
+
+    @Override
+    public double execute(double[][] mat, int n) {
+        return 0;
+    }
+
+    @Override
+    public double[][] execute(double[][] matrix) {
+        return null;
+    }
+}
+
+class MultiplyMatrices implements Operation {
+
+    @Override
+    public double[][] execute(double[][] firstMatrix, double[][] secondMatrix, int rows, int cols) {
+        double[][] resultMatrix = new double[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                for (int k = 0; k < secondMatrix.length; ++k)
+                    resultMatrix[i][j] += firstMatrix[i][k] * secondMatrix[k][j];
+            }
+        }
+        return resultMatrix;
+    }
+
+    @Override
+    public double[][] execute(double[][] matrix, int rows, int cols) {
+        return null;
+    }
+
+    @Override
+    public double[][] execute(double[][] matrix, int rows, int cols, int choice) {
+        return null;
+    }
+
+    @Override
+    public double execute(double[][] mat, int n) {
+        return 0;
+    }
+
+    @Override
+    public double[][] execute(double[][] matrix) {
+        return null;
+    }
+}
+
+class TransposeMatrix implements Operation {
+
+    @Override
+    public double[][] execute(double[][] firstMatrix, double[][] secondMatrix, int rows, int cols) {
+        return null;
+    }
+
+    @Override
+    public double[][] execute(double[][] matrix, int rows, int cols) {
+        return null;
+    }
+
+    @Override
+    public double[][] execute(double[][] matrix, int rows, int cols, int choice) {
+        double[][] result = new double[rows][cols];
+        switch (choice) {
+            case 1:
+                for (int i = 0; i < rows; i++) {
+                    for (int j = 0; j < cols; j++) {
+                        result[i][j] = matrix[j][i];
+                    }
+                }
+                break;
+            case 2:
+                for (int i = 0; i < rows; i++) {
+                    for (int j = 0; j < cols; j++) {
+                        result[i][j] = matrix[rows - 1 - j][cols - 1 - i];
+                    }
+                }
+                break;
+            case 3:
+                for (int i = 0; i < rows; i++) {
+                    for (int j = 0; j < cols; j++) {
+                        result[i][j] = matrix[i][cols - 1 - j];
+                    }
+                }
+                break;
+            case 4:
+                for (int i = 0; i < rows; i++) {
+                    if (cols >= 0) System.arraycopy(matrix[rows - 1 - i], 0, result[i], 0, cols);
+                }
+                break;
+            default:
+                break;
+        }
+        return result;
+    }
+
+    @Override
+    public double execute(double[][] mat, int n) {
+        return 0;
+    }
+
+    @Override
+    public double[][] execute(double[][] matrix) {
+        return null;
+    }
+}
+
+class CalculateDeterminant implements Operation {
+
+    @Override
+    public double[][] execute(double[][] firstMatrix, double[][] secondMatrix, int rows, int cols) {
+        return null;
+    }
+
+    @Override
+    public double[][] execute(double[][] matrix, int rows, int cols) {
+        return null;
+    }
+
+    @Override
+    public double execute(double[][] matrix, int n) {
+        double Determinant = 0;
+
+        if (n == 1) {
+            return matrix[0][0];
+        }
+
+        double[][] temp = new double[n][n];
+        int sign = 1;
+
+        for (int f = 0; f < n; f++) {
+            getCofactor(matrix, temp, 0, f, n);
+            Determinant += sign * matrix[0][f] * execute(temp, n - 1);
+            sign = -sign;
+        }
+
+        return Determinant;
+    }
+
+    static void getCofactor(double[][] mat, double[][] temp, int p, int q, int n) {
+        int i = 0;
+        int j = 0;
+
+        for (int row = 0; row < n; row++) {
+            for (int col = 0; col < n; col++) {
+                if (row != p && col != q) {
+                    temp[i][j++] = mat[row][col];
+                    if (j == n - 1) {
+                        j = 0;
+                        i++;
+                    }
+                }
+            }
+        }
+    }
+
+    double[][] adjoint(double[][] A) {
+        int N = A.length;
+        double[][] adj = new double[N][N];
+        if (N == 1) {
+            adj[0][0] = 1;
+            return adj;
+        }
+        int sign;
+        double[][] temp = new double[N][N];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                getCofactor(A, temp, i, j, N);
+                sign = ((i + j) % 2 == 0) ? 1 : -1;
+                adj[j][i] = (sign) * (execute(temp, N - 1));
+            }
+        }
+        return adj;
+    }
+
+
+    @Override
+    public double[][] execute(double[][] matrix, int rows, int cols, int choice) {
+        return null;
+    }
+
+    @Override
+    public double[][] execute(double[][] matrix) {
+        return null;
+    }
+}
+
+class InverseMatrix implements Operation {
+
+    @Override
+    public double[][] execute(double[][] firstMatrix, double[][] secondMatrix, int rows, int cols) {
+        return null;
+    }
+
+    @Override
+    public double[][] execute(double[][] matrix, int rows, int cols) {
+        return null;
+    }
+
+    @Override
+    public double[][] execute(double[][] matrix, int rows, int cols, int choice) {
+        return null;
+    }
+
+    @Override
+    public double execute(double[][] mat, int n) {
+        return 0;
+    }
+
+    @Override
+    public double[][] execute(double[][] matrix) {
+        CalculateDeterminant calc = new CalculateDeterminant();
+        double determinant = calc.execute(matrix, matrix.length);
+        return multiplyMatrix(calc.adjoint(matrix), 1 / determinant);
+    }
+
+    public double[][] multiplyMatrix(double[][] matrix, double constant) {
+        int n = matrix.length;
+        double[][] resultMatrix = new double[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                resultMatrix[i][j] = matrix[i][j] * constant;
+            }
+        }
+        return resultMatrix;
+    }
+}
+
+class OperationMethod {
+    private Operation operation;
+
+    public void setOperation(Operation operation) {
+        this.operation = operation;
+    }
+
+    public double[][] execute(double[][] firstMatrix, double[][] secondMatrix, int x, int y) {
+        return this.operation.execute(firstMatrix, secondMatrix, x, y);
+    }
+
+    public double[][] execute(double[][] matrix, int rows, int cols) {
+        return this.operation.execute(matrix, rows, cols);
+    }
+
+    public double[][] execute(double[][] matrix, int rows, int cols, int choice) {
+        return this.operation.execute(matrix, rows, cols, choice);
+    }
+
+    public double execute(double[][] matrix, int n) {
+        return this.operation.execute(matrix, n);
+    }
+
+    public double[][] execute(double[][] matrix) {
+        return this.operation.execute(matrix);
+    }
+}
+
+class MainMenu {
+    private static int rows1;
+    private static int rows2;
+    private static int cols1;
+    private static int cols2;
+    OperationMethod operationMethod = new OperationMethod();
+
+
+    int showMenu() {
+        System.out.println("1. Add matrices");
+        System.out.println("2. Multiply matrix to a constant");
+        System.out.println("3. Multiply matrices");
+        System.out.println("4. Transpose matrix");
+        System.out.println("5. Calculate a determinant");
+        System.out.println("6. Inverse matrix");
+        System.out.println("0. Exit");
+        System.out.print("Your choice: ");
+        return Main.sc.nextInt();
+    }
+
+    void addMatrices() {
+        System.out.print("Enter size of first matrix: ");
+        rows1 = Main.sc.nextInt();
+        cols1 = Main.sc.nextInt();
+        System.out.println("Enter first matrix:");
+        double[][] firstMatrix = input(rows1, cols1);
+
+        System.out.print("Enter size of second matrix: ");
+        rows2 = Main.sc.nextInt();
+        cols2 = Main.sc.nextInt();
+        System.out.println("Enter second matrix:");
+        double[][] secondMatrix = input(rows2, cols2);
+
+        if (rows1 != rows2 || cols1 != cols2) {
+            System.out.println("ERROR");
+        } else {
+            operationMethod.setOperation(new Addition());
+            System.out.println("The addition result is:");
+            output(operationMethod.execute(firstMatrix, secondMatrix, rows1, cols1));
+        }
+    }
+
+    void multiplyByConstant() {
+        System.out.print("Enter size of matrix: ");
+        rows1 = Main.sc.nextInt();
+        cols1 = Main.sc.nextInt();
+        double[][] firstMatrix = input(rows1, cols1);
+        operationMethod.setOperation(new MultiplicationByConstant());
+        output(operationMethod.execute(firstMatrix, rows1, cols1));
+    }
+
+    void multiplyMatrices() {
+        System.out.print("Enter size of first matrix: ");
+        rows1 = Main.sc.nextInt();
+        cols1 = Main.sc.nextInt();
+        System.out.println("Enter first matrix:");
+        double[][] firstMatrix = input(rows1, cols1);
+
+        System.out.print("Enter size of second matrix: ");
+        rows2 = Main.sc.nextInt();
+        cols2 = Main.sc.nextInt();
+        System.out.println("Enter second matrix:");
+        double[][] secondMatrix = input(rows2, cols2);
+
+        operationMethod.setOperation(new MultiplyMatrices());
+        output(operationMethod.execute(firstMatrix, secondMatrix, rows1, cols2));
+    }
+
+    void transposeMatrix() {
+        System.out.println("1. Main diagonal");
+        System.out.println("2. Side diagonal");
+        System.out.println("3. Vertical line");
+        System.out.println("4. Horizontal line");
+        System.out.print("Your choice: ");
+        int choice = Main.sc.nextInt();
+
+        System.out.print("Enter matrix size: ");
+        rows1 = Main.sc.nextInt();
+        cols1 = Main.sc.nextInt();
+        System.out.println("Enter matrix");
+        double[][] matrix = input(rows1, cols1);
+
+        operationMethod.setOperation(new TransposeMatrix());
+        System.out.println("The result is:");
+        output(operationMethod.execute(matrix, rows1, cols1, choice));
+    }
+
+    void calculateDeterminant() {
+        System.out.print("Enter matrix size: ");
+        rows1 = Main.sc.nextInt();
+        cols1 = Main.sc.nextInt();
+        System.out.println("Enter matrix");
+        double[][] matrix = input(rows1, cols1);
+
+        operationMethod.setOperation(new CalculateDeterminant());
+        System.out.println("The result is:");
+        System.out.println(operationMethod.execute(matrix, rows1));
+    }
+
+    void inverseMatrix() {
+        System.out.print("Enter matrix size: ");
+        rows1 = Main.sc.nextInt();
+        cols1 = Main.sc.nextInt();
+        System.out.println("Enter matrix");
+        double[][] matrix = input(rows1, cols1);
+
+        operationMethod.setOperation(new InverseMatrix());
+        System.out.println("The result is:");
+        output(operationMethod.execute(matrix));
+
+    }
+
+    static double[][] input(int rows, int cols) {
+        double[][] resultMatrix = new double[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                resultMatrix[i][j] = Main.sc.nextDouble();
+            }
+        }
+        return resultMatrix;
+    }
+
+    static void output(double[][] resultMatrix) {
+        for (double[] rows : resultMatrix) {
+            for (double value : rows) {
+                System.out.print(value + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+}
+
+public class Main {
+    static Scanner sc = new Scanner(System.in);
+    static int choice;
+
+    public static void main(String[] args) {
+
+        MainMenu menu = new MainMenu();
+
+        do {
+            choice = menu.showMenu();
+            switch (choice) {
+                case 1:
+                    menu.addMatrices();
+                    break;
+                case 2:
+                    menu.multiplyByConstant();
+                    break;
+                case 3:
+                    menu.multiplyMatrices();
+                    break;
+                case 4:
+                    menu.transposeMatrix();
+                    break;
+                case 5:
+                    menu.calculateDeterminant();
+                    break;
+                case 6:
+                    menu.inverseMatrix();
+                    break;
+                default:
+                    break;
+            }
+        } while (choice != 0);
+    }
+}
